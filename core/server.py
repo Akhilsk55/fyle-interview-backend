@@ -4,10 +4,9 @@ from core import app
 from core.apis.assignments import student_assignments_resources, teacher_assignments_resources
 from core.libs import helpers
 from core.libs.exceptions import FyleError
-from werkzeug.exceptions import HTTPException
+# from werkzeug.exceptions import HTTPException
 
 from sqlalchemy.exc import IntegrityError
-
 
 app.register_blueprint(student_assignments_resources, url_prefix='/student')
 app.register_blueprint(teacher_assignments_resources, url_prefix='/teacher')
@@ -32,13 +31,5 @@ def handle_error(err):
         return jsonify(
             error=err.__class__.__name__, message=err.messages
         ), 400
-    elif isinstance(err, IntegrityError):
-        return jsonify(
-            error=err.__class__.__name__, message=str(err.orig)
-        ), 400
-    elif isinstance(err, HTTPException):
-        return jsonify(
-            error=err.__class__.__name__, message=str(err)
-        ), err.code
-
+  
     raise err

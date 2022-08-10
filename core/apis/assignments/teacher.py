@@ -16,26 +16,11 @@ def list_assignments(p):
     teacher_assignments_dump = AssignmentSchema().dump(teacher_assignments, many=True)
     return APIResponse.respond(data=teacher_assignments_dump)
 
-
-@teacher_assignments_resources.route('assignments', methods=['POST'], strict_slashes=False)
-@decorators.accept_payload
-@decorators.auth_principal
-def upsert_assignment(p, incoming_payload):
-    """Create or Edit an assignment"""
-    assignment = AssignmentSchema().load(incoming_payload)
-    assignment.teacher_id = p.teacher_id
-
-    upserted_assignment = Assignment.upsert(assignment)
-    db.session.commit()
-    upserted_assignment_dump = AssignmentSchema().dump(upserted_assignment)
-    return APIResponse.respond(data=upserted_assignment_dump)
-
-
 @teacher_assignments_resources.route('/assignments/grade', methods=['POST'], strict_slashes=False)
 @decorators.accept_payload
 @decorators.auth_principal
 def graded_assignment(p, incoming_payload):
-    """Submit an assignment"""
+    """grade an assignment"""
     grade_assignment_payload = AssignmentGradeSchema().load(incoming_payload)
 
     graded_assignment = Assignment.graded(
